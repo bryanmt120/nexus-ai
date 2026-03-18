@@ -1,4 +1,4 @@
-"use client";
+"use client"; // <--- SOLO ESTE AL PRINCIPIO
 
 import React from "react";
 import Link from "next/link";
