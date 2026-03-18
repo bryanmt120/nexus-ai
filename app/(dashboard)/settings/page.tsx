@@ -14,8 +14,7 @@ export default async function SettingsPage() {
       {/* Quick info */}
       <div className="animate-fade-up delay-100" style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14,marginBottom:28 }}>
         {[
-          { label:"USER ID",   value: user?.id?.slice(0,16)+"..." ?? "—" },
-          { label:"EMAIL",     value: user?.emailAddresses[0]?.emailAddress ?? "—" },
+{ label:"USER ID",   value: user?.id ? user.id.slice(0,16)+"..." : "—" },          { label:"EMAIL",     value: user?.emailAddresses[0]?.emailAddress ?? "—" },
           { label:"NOMBRE",    value: `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim() || "—" },
           { label:"CREADO",    value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("es-MX") : "—" },
         ].map(({ label, value }) => (
