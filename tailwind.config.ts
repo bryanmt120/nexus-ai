@@ -1,0 +1,88 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Terminal Architect color system (from Google Stitch)
+        "primary": "#b1c5ff",
+        "on-primary": "#002c70",
+        "primary-container": "#001946",
+        "on-primary-container": "#5280e6",
+        "secondary": "#adcbda",
+        "on-secondary": "#163440",
+        "secondary-container": "#304d5a",
+        "on-secondary-container": "#9fbdcc",
+        "tertiary": "#00daf3",
+        "on-tertiary": "#00363d",
+        "tertiary-container": "#001f24",
+        "on-tertiary-container": "#0091a2",
+        "error": "#ffb4ab",
+        "error-container": "#93000a",
+        "background": "#0b1326",
+        "on-background": "#dae2fd",
+        "surface": "#0b1326",
+        "on-surface": "#dae2fd",
+        "on-surface-variant": "#c4c6cf",
+        "surface-variant": "#2d3449",
+        "surface-dim": "#0b1326",
+        "surface-bright": "#31394d",
+        "surface-container-lowest": "#060e20",
+        "surface-container-low": "#131b2e",
+        "surface-container": "#171f33",
+        "surface-container-high": "#222a3d",
+        "surface-container-highest": "#2d3449",
+        "outline": "#8e9099",
+        "outline-variant": "#44474e",
+        "inverse-surface": "#dae2fd",
+        "inverse-on-surface": "#283044",
+        "inverse-primary": "#2559bd",
+      },
+      fontFamily: {
+        "headline": ["Space Grotesk", "sans-serif"],
+        "body": ["Inter", "sans-serif"],
+        "mono": ["JetBrains Mono", "monospace"],
+      },
+      borderRadius: {
+        DEFAULT: "0px",
+        none: "0px",
+        sm: "0px",
+        md: "0px",
+        lg: "0px",
+        xl: "0px",
+        "2xl": "0px",
+        full: "9999px",
+      },
+      animation: {
+        "cursor-blink": "blink 1.2s step-end infinite",
+        "slide-up": "slideUp 0.4s ease-out",
+        "fade-in": "fadeIn 0.6s ease-out",
+        "scan": "scan 3s linear infinite",
+      },
+      keyframes: {
+        blink: {
+          "0%, 100%": { opacity: 1 },
+          "50%": { opacity: 0 },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(16px)", opacity: 0 },
+          "100%": { transform: "translateY(0)", opacity: 1 },
+        },
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        scan: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100vh)" },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
