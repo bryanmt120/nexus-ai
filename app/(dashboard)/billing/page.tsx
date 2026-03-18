@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import Link from "next/link";
 
 export default function BillingPage() {
@@ -83,16 +86,47 @@ export default function BillingPage() {
   );
 }
 
+"use client";
+
 function UpgradeButton({ planName }: { planName: string }) {
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleUpgrade = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planName }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Error desconocido");
+        return;
+      }
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+    } catch (err: any) {
+      setError(err.message ?? "Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <form action="/api/subscription" method="POST">
-      <input type="hidden" name="plan" value={planName} />
+    <div>
       <button
-        type="submit"
-        className="btn-primary w-full text-xs py-3"
+        onClick={handleUpgrade}
+        disabled={loading}
+        className="btn-primary w-full text-xs py-3 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        UPGRADE_NOW →
+        {loading ? "PROCESANDO..." : "UPGRADE_NOW →"}
       </button>
-    </form>
+      {error && (
+        <p className="mt-2 font-mono text-xs text-error">ERROR: {error}</p>
+      )}
+    </div>
   );
 }

@@ -52,8 +52,9 @@ export default function ChatPage() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
 
+      const assistantId = crypto.randomUUID();
       const assistantMessage: Message = {
-        id: crypto.randomUUID(),
+        id: assistantId,
         role: "assistant",
         content: "",
         timestamp: new Date(),
@@ -61,28 +62,43 @@ export default function ChatPage() {
       setMessages((prev) => [...prev, assistantMessage]);
 
       if (reader) {
+        let buffer = "";
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          const chunk = decoder.decode(value);
-          const lines = chunk.split("\n");
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? ""; // keep incomplete line in buffer
+
           for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              const data = line.slice(6);
-              if (data === "[DONE]") break;
-              try {
-                const parsed = JSON.parse(data);
-                const delta = parsed.choices?.[0]?.delta?.content || "";
-                if (delta) {
-                  setMessages((prev) =>
-                    prev.map((m) =>
-                      m.id === assistantMessage.id
-                        ? { ...m, content: m.content + delta }
-                        : m
-                    )
-                  );
-                }
-              } catch {}
+            if (!line.startsWith("data: ")) continue;
+            const raw = line.slice(6).trim();
+            if (raw === "[DONE]") break;
+            try {
+              const parsed = JSON.parse(raw);
+              // Check for server-side error sent through stream
+              if (parsed.error) {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === assistantId
+                      ? { ...m, content: `ERROR: ${parsed.error}` }
+                      : m
+                  )
+                );
+                break;
+              }
+              // { text: "..." } — our new SSE format
+              if (parsed.text) {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === assistantId
+                      ? { ...m, content: m.content + parsed.text }
+                      : m
+                  )
+                );
+              }
+            } catch {
+              // malformed JSON chunk — ignore
             }
           }
         }
@@ -93,7 +109,7 @@ export default function ChatPage() {
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "ERROR: Failed to connect to AI engine. Check your API configuration.",
+          content: "ERROR: No se pudo conectar con el AI. Verifica que ANTHROPIC_API_KEY esté configurada en Vercel.",
           timestamp: new Date(),
         },
       ]);
