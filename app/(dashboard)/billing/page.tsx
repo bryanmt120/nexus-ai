@@ -86,7 +86,7 @@ export default function BillingPage() {
   );
 }
 
-"use client";
+
 
 function UpgradeButton({ planName }: { planName: string }) {
   const [loading, setLoading] = React.useState(false);
