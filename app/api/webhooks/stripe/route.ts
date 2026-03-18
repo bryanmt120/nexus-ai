@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-apiVersion: "2025-02-24.acacia",
+apiVersion: "2025-02-24.acacia"
 });
 
 // Supabase admin client (bypasses RLS)
@@ -36,8 +36,7 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       // ✅ Subscription created/activated
       case "checkout.session.completed": {
-        const session = event.data.object as Stripe.CheckoutSession;
-        const userId = session.metadata?.userId;
+const session = event.data.object as Stripe.Checkout.Session;        const userId = session.metadata?.userId;
         const subscriptionId = session.subscription as string;
 
         if (userId && subscriptionId) {
